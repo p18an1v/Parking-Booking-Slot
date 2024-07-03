@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Lot Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Media Query for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+
+            input[type="number"] {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Parking Lot Management System</h1>
+    <div id="slotsContainer">
+        <table>
+            <thead>
+            <tr>
+                <th>Slot Number</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="slot : ${slots}">
+                <td th:text="${slot.slotNumber}"></td>
+                <td th:text="${slot.available ? 'Available' : 'Booked'}"></td>
+                <td>
+                    <form th:action="@{/parking/book}" method="post">
+                        <input type="hidden" name="slotNumber" th:value="${slot.slotNumber}">
+                        <button type="submit" th:if="${slot.available}">Book</button>
+                        <button type="button" th:if="${!slot.available}" >Booked</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <form th:action="@{/parking/book}" method="post">
+        <label for="slotNumberInput">Enter slot number to book:</label>
+        <input type="number" id="slotNumberInput" name="slotNumber" required>
+        <button type="submit">Book Slot</button>
+    </form>
+    <form th:action="@{/parking/unbook}" method="post">
+        <label for="unbookSlotNumberInput">Enter slot number to unbook:</label>
+        <input type="number" id="unbookSlotNumberInput" name="slotNumber" required>
+        <button type="submit">Unbook Slot</button>
+    </form>
+</div>
+</body>
+</html>
